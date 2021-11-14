@@ -6,9 +6,9 @@ n = int(lst1[0])
 q = int(lst1[1])
 
 # Store the stations in a list and format them
-stations = input().split(" ")
-stations = list(filter(None, stations))
-stations = list(map(int, stations))
+# stations = input().split(" ")
+# stations = list(filter(None, stations))
+# stations = list(map(int, stations))
     
 # Debug
 # print()
@@ -21,15 +21,27 @@ stations = list(map(int, stations))
 # Format requests
 requests = []
 
+stations = []
+import random
 i = 0
-while i < q:
-    requests.append(list(input().split(" ")))
+while i < n:
+    stations.append(random.randint(1,100))
     i += 1
 
 i = 0
 while i < q:
-    requests[i] = list(map(int, list(filter(None, requests[i]))))
+    requests.append([random.randint(1, n), random.randint(1, n)])
     i += 1
+
+# i = 0
+# while i < q:
+#     requests.append(list(input().split(" ")))
+#     i += 1
+
+# i = 0
+# while i < q:
+#     requests[i] = list(map(int, list(filter(None, requests[i]))))
+#     i += 1
 
 def main():
     for pair in requests:
@@ -66,7 +78,7 @@ def getDistance(a, b):
     i = a - 1
     j = a - 1
 
-    # count = 0
+    count = 0
 
     while not(forwardLoopFinished and backwardLoopFinished):
         # Loop for the forward distance
@@ -122,7 +134,7 @@ def getDistance(a, b):
             j -= 1
             backwardDistance += stations[j]
 
-        # count += 1
+        count += 1
 
         # print()
         # print("Current loop number: %s" % (str(count)))
@@ -134,14 +146,14 @@ def getDistance(a, b):
         # print("backwardDistance: %s" % (str(backwardDistance)))
         # print("smallestDistance: %s" % (str(smallestDistance)))
 
-    # print("-------------------------")
-    # print("Pair: [%s, %s]" % (str(a), str(b)))
-    # print("Number of loops: %s" % (str(count)))
-    # print("i: %s" % (str(i)))
-    # print("j: %s" % (str(j)))
-    # print("smallestDistance: %s" % (str(smallestDistance)))
-    # print("-------------------------")    
+    print("-------------------------")
+    print("Pair: [%s, %s]" % (str(a), str(b)))
+    print("Number of loops: %s" % (str(count)))
+    print("i: %s" % (str(i)))
+    print("j: %s" % (str(j)))
+    print("smallestDistance: %s" % (str(smallestDistance)))
     
-    print(smallestDistance)
+    
+    #print(smallestDistance)
 
 main()
