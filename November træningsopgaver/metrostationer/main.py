@@ -37,7 +37,8 @@ def main():
         # print("current pair: ")
         # print(pair)
         # print()
-        distance(pair[0], pair[1])
+        getDistance(pair[0], pair[1])
+
 # Debug
 # print()
 # print("n: " + str(n))
@@ -49,143 +50,98 @@ def main():
 # print("requests: ")
 # print(requests)
 # print()
+    
 
-def distance(a, b):
-    smallestDistance = 10000
 
-    iFinished = False
-    jFinished = False
-    kFinished = False
-    lFinished = False
-
-    anyLoopFinished = False
-
-    i = a - 1
-    j = b - 1
-    k = a - 1
-    l = b - 1
+def getDistance(a, b):
+    
+    forwardLoopFinished = False
+    backwardLoopFinished = False
 
     forwardDistance = 0
-    invForwardDistance = 0
     backwardDistance = 0
-    invBackwardDistance = 0
 
-    forwardDistanceTemp = 0
-    invForwardDistanceTemp = 0
-    backwardDistanceTemp = 0
-    invBackwardDistanceTemp = 0
+    smallestDistance = 0
 
-    while not(iFinished and kFinished):
+    i = a - 1
+    j = a - 1
 
-        # If any of the other loops are finished
-        if(anyLoopFinished):
-            # Check if what they found is smaller than the current value
-            if(forwardDistanceTemp >= smallestDistance):
-                # Stop searching if it is
-                iFinished = True
+    # count = 0
 
-        # if(anyLoopFinished):
-        #     if(invForwardDistanceTemp >= smallestDistance):
-        #         jFinished = True
+    while not(forwardLoopFinished and backwardLoopFinished):
+        # Loop for the forward distance
 
-        if(anyLoopFinished):
-            if(backwardDistanceTemp >= smallestDistance):
-                kFinished = True
+        # If this loop finishes for the first time
+        if((i == b - 1) and not(forwardLoopFinished)):
+            forwardLoopFinished = True
 
-        # if(anyLoopFinished):
-        #     if(invBackwardDistanceTemp >= smallestDistance):
-        #         lFinished = True
+            # If the other loop hasn't finished, then the smallest value is the current value
+            if(not(backwardLoopFinished)):
+                smallestDistance = forwardDistance
 
-        if(iFinished and kFinished):
-            break
+            # If it has, then check to see which is smaller and exit the loop
+            elif(forwardDistance <= smallestDistance):
+                smallestDistance = forwardDistance
+                break
+    
+        # Stop the loop if the other loop is finished and has found a smaller value
+        if(backwardLoopFinished):
+            if(forwardDistance >= smallestDistance):
+                forwardLoopFinished = True
 
-        # Forward distance loop
-
-        # If the loop has finished (for the first time)
-        if((i == b - 1) and iFinished == False):
-            iFinished = True
-            anyLoopFinished = True
-            # Check against smallest distance
-            if(forwardDistanceTemp <= smallestDistance):
-                smallestDistance = forwardDistanceTemp
-
-        if(i >= len(stations) - 1):
-            forwardDistanceTemp += stations[n - 1]
+        if(i + 1 > n - 1):
+            forwardDistance += stations[n - 1]
             i = 0
 
         else:
-            forwardDistanceTemp += stations[i]
+            forwardDistance += stations[i]
             i += 1
+
+        # Loop for the backward distance
+
+        if((j == b - 1) and not(backwardLoopFinished)):
+            backwardLoopFinished = True
+
+            if(not(forwardLoopFinished)):
+                smallestDistance = backwardDistance
+
+            elif(backwardDistance <= smallestDistance):
+                smallestDistance = backwardDistance
+                break
             
-        # Inverse forward distance loop
+        # Stop the loop if the other loop is finished and has found a smaller value
+        if(forwardLoopFinished):
+            if(backwardDistance >= smallestDistance):
+                backwardLoopFinished = True
 
-        # if((j == a - 1) and jFinished == False):
-        #     jFinished = True
-        #     anyLoopFinished = True
-
-        #     if(invForwardDistanceTemp <= smallestDistance):
-        #         smallestDistance = invForwardDistanceTemp
-
-        # if(j >= len(stations) - 1):
-        #     invForwardDistanceTemp += stations[n - 1]
-        #     j = 0
-
-        # else:
-        #     invForwardDistanceTemp += stations[j]
-        #     j += 1
-
-        # Backward distance loop
-
-        if((k == b - 1) and kFinished == False):
-            kFinished = True
-            anyLoopFinished = True
-
-            if(backwardDistanceTemp <= smallestDistance):
-                smallestDistance = backwardDistanceTemp
-            
-        if(k <= 0):
-            backwardDistanceTemp += stations[n - 1]
-            k = n - 1
-
+        if(j - 1 == (-1)):
+            j = n - 1
+            backwardDistance += stations[n - 1]
+        
         else:
-            backwardDistanceTemp += stations[k - 1]
-            k -= 1
+            j -= 1
+            backwardDistance += stations[j]
 
-        # Inverse backward distance loop
+        # count += 1
 
-        # if((l == a - 1) and lFinished == False):
-        #     lFinished = True
-        #     anyLoopFinished = True
-
-        #     if(invBackwardDistanceTemp <= smallestDistance):
-        #         smallestDistance = invBackwardDistanceTemp
-
-        # if(l < 0):
-        #     invBackwardDistanceTemp += stations[n - 1]
-        #     l = n - 1
-
-        # else:
-        #     invBackwardDistanceTemp += stations[l - 1]
-        #     l -= 1
-        
-        # print("invForwardDistanceTemp: %s" % (str(invForwardDistanceTemp)))
-        
-        
-        
         # print()
-        # smallestDistance = min([forwardDistance, invForwardDistance, backwardDistance, invBackwardDistance])
+        # print("Current loop number: %s" % (str(count)))
+        # print("i: %s" % (str(i)))
+        # print("j: %s" % (str(j)))
+        # print("forwardLoopFinished: %s" % (str(forwardLoopFinished)))
+        # print("backwardLoopFinished: %s" % (str(backwardLoopFinished)))
+        # print("forwardDistance: %s" % (str(forwardDistance)))
+        # print("backwardDistance: %s" % (str(backwardDistance)))
+        # print("smallestDistance: %s" % (str(smallestDistance)))
 
-        # print("forwardDistanceTemp: %s" % (str(forwardDistanceTemp)))
-        # # print("smallestDistance: %s" % (str(smallestDistance)))
-        # print("backwardDistanceTemp: %s" % (str(backwardDistanceTemp)))
-        # print("k: %s" % (str(k)))
-        # # print("invBackwardDistanceTemp: %s" % (str(invBackwardDistanceTemp)))
-        # print("smallestDistance: " + str(smallestDistance))
-        # print("anyLoopFinished: "+ str(anyLoopFinished))
-        # print()
+    # print("-------------------------")
+    # print("Pair: [%s, %s]" % (str(a), str(b)))
+    # print("Number of loops: %s" % (str(count)))
+    # print("i: %s" % (str(i)))
+    # print("j: %s" % (str(j)))
+    # print("smallestDistance: %s" % (str(smallestDistance)))
+    # print("-------------------------")    
     
-    print(int(smallestDistance))
-    # print()
+    print(smallestDistance)
 
 main()
-
