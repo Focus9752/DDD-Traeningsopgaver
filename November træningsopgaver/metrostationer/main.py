@@ -1,3 +1,4 @@
+from ticktock import tick
 
 # Seperate n and q
 lst1 = input()
@@ -25,7 +26,7 @@ stations = []
 import random
 i = 0
 while i < n:
-    stations.append(random.randint(1,100))
+    stations.append(random.randint(1,10**9))
     i += 1
 
 i = 0
@@ -44,13 +45,14 @@ while i < q:
 #     i += 1
 
 def main():
+    clock = tick()
     for pair in requests:
         # print()
         # print("current pair: ")
         # print(pair)
         # print()
         getDistance(pair[0], pair[1])
-
+    clock.tock()
 # Debug
 # print()
 # print("n: " + str(n))
@@ -146,14 +148,15 @@ def getDistance(a, b):
         # print("backwardDistance: %s" % (str(backwardDistance)))
         # print("smallestDistance: %s" % (str(smallestDistance)))
 
-    print("-------------------------")
-    print("Pair: [%s, %s]" % (str(a), str(b)))
-    print("Number of loops: %s" % (str(count)))
-    print("i: %s" % (str(i)))
-    print("j: %s" % (str(j)))
-    print("smallestDistance: %s" % (str(smallestDistance)))
+    # print("-------------------------")
+    # print("Pair: [%s, %s]" % (str(a), str(b)))
+    # print("Number of loops: %s" % (str(count)))
+    # print("i: %s" % (str(i)))
+    # print("j: %s" % (str(j)))
+    # print("smallestDistance: %s" % (str(smallestDistance)))
     
     
-    #print(smallestDistance)
+    print(smallestDistance)
+
 
 main()
