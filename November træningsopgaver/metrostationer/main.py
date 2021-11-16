@@ -158,5 +158,4 @@ def getDistance(a, b):
     
     print(smallestDistance)
 
-
 main()
