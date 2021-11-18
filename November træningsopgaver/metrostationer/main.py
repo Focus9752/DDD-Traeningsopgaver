@@ -82,6 +82,10 @@ def getDistance(a, b):
 
     count = 0
 
+    # Do the forward loop first if 
+    if(a <= b and (heuristic(a, b) <= 0.05)):
+        
+
     while not(forwardLoopFinished and backwardLoopFinished):
         # Loop for the forward distance
 
@@ -157,5 +161,8 @@ def getDistance(a, b):
     
     
     print(smallestDistance)
+
+def heuristic(a,b):
+    return (abs(a - b)) / len(stations)
 
 main()
