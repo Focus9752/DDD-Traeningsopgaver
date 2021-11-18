@@ -44,6 +44,8 @@ while i < q:
 #     requests[i] = list(map(int, list(filter(None, requests[i]))))
 #     i += 1
 
+
+
 def main():
     clock = tick()
     for pair in requests:
@@ -65,7 +67,8 @@ def main():
 # print(requests)
 # print()
     
-
+def heuristic(a,b):
+    return (abs(a - b)) / len(stations)
 
 def getDistance(a, b):
     
@@ -77,70 +80,104 @@ def getDistance(a, b):
 
     smallestDistance = 0
 
+    #Cache the heuristic
+    heuristicVal = heuristic(a, b)
+
     i = a - 1
     j = a - 1
 
     count = 0
 
-    # Do the forward loop first if 
-    if(a <= b and (heuristic(a, b) <= 0.05)):
-        
-
-    while not(forwardLoopFinished and backwardLoopFinished):
-        # Loop for the forward distance
-
-        # If this loop finishes for the first time
-        if((i == b - 1) and not(forwardLoopFinished)):
-            forwardLoopFinished = True
-
-            # If the other loop hasn't finished, then the smallest value is the current value
-            if(not(backwardLoopFinished)):
+    # If the target station is ahead of the start station, we check if the value of the
+    # heuristic is below some level (5% for example)
+    if(a <= b and (heuristicVal <= 0.05)):
+        # We only do the forward loop.
+        while True:
+            # Condition to end the loop
+            if(i == b - 1):
                 smallestDistance = forwardDistance
-
-            # If it has, then check to see which is smaller and exit the loop
-            elif(forwardDistance <= smallestDistance):
-                smallestDistance = forwardDistance
-                break
-    
-        # Stop the loop if the other loop is finished and has found a smaller value
-        if(backwardLoopFinished):
-            if(forwardDistance >= smallestDistance):
-                forwardLoopFinished = True
-
-        if(i + 1 > n - 1):
-            forwardDistance += stations[n - 1]
-            i = 0
-
-        else:
-            forwardDistance += stations[i]
-            i += 1
-
-        # Loop for the backward distance
-
-        if((j == b - 1) and not(backwardLoopFinished)):
-            backwardLoopFinished = True
-
-            if(not(forwardLoopFinished)):
-                smallestDistance = backwardDistance
-
-            elif(backwardDistance <= smallestDistance):
-                smallestDistance = backwardDistance
                 break
             
-        # Stop the loop if the other loop is finished and has found a smaller value
-        if(forwardLoopFinished):
-            if(backwardDistance >= smallestDistance):
+            if(i + 1 > n - 1):
+                forwardDistance += stations[n - 1]
+                i = 0
+
+            else:
+                forwardDistance += stations[i]
+                i += 1
+
+    elif((a >= b) and (heuristicVal <= 0.05)):
+        # We only do the backward loop
+        while True:
+            if(j == b - 1):
+                smallestDistance = backwardDistance
+                break
+
+            if(j - 1 == (-1)):
+                j = n - 1
+                backwardDistance += stations[n - 1]
+        
+            else:
+                j -= 1
+                backwardDistance += stations[j]
+
+
+    else:
+        while not(forwardLoopFinished and backwardLoopFinished):
+        # Loop for the forward distance
+
+            # If this loop finishes for the first time
+            if((i == b - 1) and not(forwardLoopFinished)):
+                forwardLoopFinished = True
+
+                # If the other loop hasn't finished, then the smallest value is the current value
+                if(not(backwardLoopFinished)):
+                    smallestDistance = forwardDistance
+
+                # If it has, then check to see which is smaller and exit the loop
+                elif(forwardDistance <= smallestDistance):
+                    smallestDistance = forwardDistance
+                    break
+        
+            # Stop the loop if the other loop is finished and has found a smaller value
+            if(backwardLoopFinished):
+                if(forwardDistance >= smallestDistance):
+                    forwardLoopFinished = True
+
+            if(i + 1 > n - 1):
+                forwardDistance += stations[n - 1]
+                i = 0
+
+            else:
+                forwardDistance += stations[i]
+                i += 1
+
+            # Loop for the backward distance
+
+            if((j == b - 1) and not(backwardLoopFinished)):
                 backwardLoopFinished = True
 
-        if(j - 1 == (-1)):
-            j = n - 1
-            backwardDistance += stations[n - 1]
-        
-        else:
-            j -= 1
-            backwardDistance += stations[j]
+                if(not(forwardLoopFinished)):
+                    smallestDistance = backwardDistance
 
-        count += 1
+                elif(backwardDistance <= smallestDistance):
+                    smallestDistance = backwardDistance
+                    break
+                
+            # Stop the loop if the other loop is finished and has found a smaller value
+            if(forwardLoopFinished):
+                if(backwardDistance >= smallestDistance):
+                    backwardLoopFinished = True
+
+            if(j - 1 == (-1)):
+                j = n - 1
+                backwardDistance += stations[n - 1]
+            
+            else:
+                j -= 1
+                backwardDistance += stations[j]
+
+            count += 1
 
         # print()
         # print("Current loop number: %s" % (str(count)))
@@ -162,7 +199,6 @@ def getDistance(a, b):
     
     print(smallestDistance)
 
-def heuristic(a,b):
-    return (abs(a - b)) / len(stations)
+
 
 main()
