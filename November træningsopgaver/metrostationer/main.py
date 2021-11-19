@@ -44,7 +44,8 @@ while i < q:
 #     requests[i] = list(map(int, list(filter(None, requests[i]))))
 #     i += 1
 
-
+totalPairs = len(requests)
+totalHeuristics = 0
 
 def main():
     clock = tick()
@@ -55,6 +56,8 @@ def main():
         # print()
         getDistance(pair[0], pair[1])
     clock.tock()
+    print("Used heuristic in %s og %s cases (%s%)" % (str(totalHeuristics), str(totalPairs), str(((abs(totalHeuristics - totalPairs) / totalPairs) * 100))))
+
 # Debug
 # print()
 # print("n: " + str(n))
@@ -96,6 +99,8 @@ def getDistance(a, b):
             # Condition to end the loop
             if(i == b - 1):
                 smallestDistance = forwardDistance
+                global totalHeuristics
+                totalHeuristics += 1
                 break
             
             if(i + 1 > n - 1):
@@ -111,6 +116,8 @@ def getDistance(a, b):
         while True:
             if(j == b - 1):
                 smallestDistance = backwardDistance
+                # global totalHeuristics
+                totalHeuristics += 1
                 break
 
             if(j - 1 == (-1)):
@@ -120,7 +127,7 @@ def getDistance(a, b):
             else:
                 j -= 1
                 backwardDistance += stations[j]
-
+        
 
     else:
         while not(forwardLoopFinished and backwardLoopFinished):
@@ -178,6 +185,8 @@ def getDistance(a, b):
                 backwardDistance += stations[j]
 
             count += 1
+
+        print("Did not use heuristic")
 
         # print()
         # print("Current loop number: %s" % (str(count)))
