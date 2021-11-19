@@ -50,15 +50,19 @@ def main():
     heuristicDistances = []
     slowDistances = []
 
-    clock = tick()
+    # clock = tick()
     for pair in requests:
         heuristicDistances.append(int(getDistance(pair[0], pair[1])))
+    # clock.tock()
+    print()
 
     print("Please wait, checking for errors...")
 
+    # clock.tick()
     for pair in requests:
         slowDistances.append(int(getDistanceSlow(pair[0], pair[1])))
-    clock.tock()
+    # clock.tock()
+    print()
 
     print("Used heuristic in {} out of {} cases ({} %)".format(str(totalHeuristics), str(totalPairs), str(((totalHeuristics / totalPairs) * 100))))
 
@@ -226,7 +230,7 @@ def getDistance(a, b):
     # print("smallestDistance: %s" % (str(smallestDistance)))
     
     
-    print(smallestDistance)
+    # print(smallestDistance)
     return smallestDistance
 
 # Gets distance without using heuristics
@@ -300,6 +304,7 @@ def getDistanceSlow(a, b):
 
         count += 1
     
+    # print(smallestDistance)
     return smallestDistance
     
 def getErrors(fastDist, slowDist):
