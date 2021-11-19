@@ -1,5 +1,3 @@
-from ticktock import tick
-
 # Seperate n and q
 lst1 = input()
 lst1 = lst1.split(" ")
@@ -7,9 +5,9 @@ n = int(lst1[0])
 q = int(lst1[1])
 
 # Store the stations in a list and format them
-# stations = input().split(" ")
-# stations = list(filter(None, stations))
-# stations = list(map(int, stations))
+stations = input().split(" ")
+stations = list(filter(None, stations))
+stations = list(map(int, stations))
     
 # Debug
 # print()
@@ -22,41 +20,42 @@ q = int(lst1[1])
 # Format requests
 requests = []
 
-stations = []
-import random
+# from ticktock import tick
+# stations = []
+# import random
+# i = 0
+# while i < n:
+#     stations.append(random.randint(1,10**9))
+#     i += 1
+
+# i = 0
+# while i < q:
+#     requests.append([random.randint(1, n), random.randint(1, n)])
+#     i += 1
+
 i = 0
-while i < n:
-    stations.append(random.randint(1,10**9))
+while i < q:
+    requests.append(list(input().split(" ")))
     i += 1
 
 i = 0
 while i < q:
-    requests.append([random.randint(1, n), random.randint(1, n)])
+    requests[i] = list(map(int, list(filter(None, requests[i]))))
     i += 1
-
-# i = 0
-# while i < q:
-#     requests.append(list(input().split(" ")))
-#     i += 1
-
-# i = 0
-# while i < q:
-#     requests[i] = list(map(int, list(filter(None, requests[i]))))
-#     i += 1
 
 totalPairs = len(requests)
 totalHeuristics = 0
 
 def main():
-    clock = tick()
+    # clock = tick()
     for pair in requests:
         # print()
         # print("current pair: ")
         # print(pair)
         # print()
         getDistance(pair[0], pair[1])
-    clock.tock()
-    print("Used heuristic in %s og %s cases (%s%)" % (str(totalHeuristics), str(totalPairs), str(((abs(totalHeuristics - totalPairs) / totalPairs) * 100))))
+    # print("Used heuristic in {} out of {} cases ({} %)".format(str(totalHeuristics), str(totalPairs), str(((totalHeuristics / totalPairs) * 100))))
+    # clock.tock()
 
 # Debug
 # print()
@@ -83,8 +82,31 @@ def getDistance(a, b):
 
     smallestDistance = 0
 
-    #Cache the heuristic
+    # Cache the heuristic
     heuristicVal = heuristic(a, b)
+
+    # Heuristic acceptance value
+    acceptanceVal = 0
+    if(len(stations) <= 1000):
+        acceptanceVal = 0.005
+    elif(len(stations) <= 10000):
+        acceptanceVal = 0.10
+    else:
+        acceptanceVal = 0.20
+    
+
+    # The acceptance value is calculated in the heuristic()-method.
+    # It shows the portion of the total stations that a and b cover.
+    #
+    # If the acceptance value is set to some percentage, like 5%, then the heuristic will be used
+    # in all cases where the portion of the stations that lie between a and b are less than 5% of all the stations.
+    #
+    # The proportion of times the heuristic is used is usually around twice the acceptance value, since it applies
+    # to cases where a and b are really close together as well as cases where they are "close together" but on opposite 
+    # ends of the list of stations.
+    #
+    # In our 5% example, the heuristic would apply to both the bottom 5% and top 5% (95%) of cases for the distance between a and b.
+
 
     i = a - 1
     j = a - 1
@@ -93,7 +115,7 @@ def getDistance(a, b):
 
     # If the target station is ahead of the start station, we check if the value of the
     # heuristic is below some level (5% for example)
-    if(a <= b and (heuristicVal <= 0.05)):
+    if(a <= b and (heuristicVal <= acceptanceVal or heuristicVal >= (1 - acceptanceVal))):
         # We only do the forward loop.
         while True:
             # Condition to end the loop
@@ -111,7 +133,7 @@ def getDistance(a, b):
                 forwardDistance += stations[i]
                 i += 1
 
-    elif((a >= b) and (heuristicVal <= 0.05)):
+    elif((a >= b) and (heuristicVal <= acceptanceVal or heuristicVal >= (1 - acceptanceVal))):
         # We only do the backward loop
         while True:
             if(j == b - 1):
@@ -185,8 +207,6 @@ def getDistance(a, b):
                 backwardDistance += stations[j]
 
             count += 1
-
-        print("Did not use heuristic")
 
         # print()
         # print("Current loop number: %s" % (str(count)))
