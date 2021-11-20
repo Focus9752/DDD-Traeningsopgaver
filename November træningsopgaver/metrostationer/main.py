@@ -314,6 +314,7 @@ def getErrors(fastDist, slowDist):
             errors += 1
     
     return errors
-    
+
+        
 
 main()
