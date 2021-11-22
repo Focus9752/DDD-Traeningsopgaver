@@ -1,3 +1,7 @@
+import random
+from ticktock import tick
+import time
+
 # Seperate n and q
 lst1 = input()
 lst1 = lst1.split(" ")
@@ -20,9 +24,8 @@ q = int(lst1[1])
 # Format requests
 requests = []
 
-from ticktock import tick
 stations = []
-import random
+
 i = 0
 while i < n:
     stations.append(random.randint(1,10**9))
@@ -46,29 +49,41 @@ while i < q:
 totalPairs = len(requests)
 totalHeuristics = 0
 
+print("Please enter an acceptance value for the heuristic function (0 - 100).")
+userAcceptanceVal = (int(input("Acceptance value: ")) / 100)
+print()
+
 def main():
     heuristicDistances = []
     slowDistances = []
 
-    # clock = tick()
+    print("Calculating the distances using the fast method...")
+
+    t0 = time.time()
     for pair in requests:
         heuristicDistances.append(int(getDistance(pair[0], pair[1])))
-    # clock.tock()
+    t1 = time.time()
+
+    print("Calculating the distances took approximately {} s".format(str(round(t1 - t0,3))))
     print()
 
+    print("- - - - - - - - - - - - -")
     print("Please wait, checking for errors...")
 
-    # clock.tick()
+    t0 = time.time()
     for pair in requests:
         slowDistances.append(int(getDistanceSlow(pair[0], pair[1])))
-    # clock.tock()
+    t1 = time.time()
+    print("Checking for errors using the slow method took approximately {} s".format(str(round(t1 - t0,3))))
     print()
 
+    print("- - - - - - - - - - - - -")
     print("Used heuristic in {} out of {} cases ({} %)".format(str(totalHeuristics), str(totalPairs), str(((totalHeuristics / totalPairs) * 100))))
+    
 
     errorsFound = getErrors(heuristicDistances, slowDistances)
 
-    print("The heuristic method made {} erros out of {} attempts.".format(errorsFound, len(stations)))
+    print("The heuristic method made {} erros in of {} attempts.".format(errorsFound, len(stations)))
     print("The error percentage was {}".format(str((errorsFound / len(stations) * 100))) + "%" + " compared to the slower method.")
 
     
@@ -104,7 +119,7 @@ def getDistance(a, b):
     heuristicVal = heuristic(a, b)
 
     # Heuristic acceptance value
-    acceptanceVal = 0.25
+    acceptanceVal = userAcceptanceVal
     # if(len(stations) <= 1000):
     #     acceptanceVal = 0.005
     # elif(len(stations) <= 10000):
