@@ -81,12 +81,13 @@ def main():
         print("Calculating the distances using the prefix sum method...")
         print("Generating prefix sum list...")
         t0 = time.time()
-        sumList = [sum(stations[ : i + 1]) for i in range(len(stations))]
+        # sumList = [sum(stations[ : i + 1]) for i in range(len(stations))]
+        sumList = getSumlist(stations)
         totalLength = sumList[len(stations) - 1]
         tprefixsum = time.time()
         print("Calculating distances...")
         for pair in requests:
-            fastDistances.append(int(getDistance(pair[0], pair[1], sumList, totalLength)))
+            fastDistances.append(int(getDistanceFast(pair[0], pair[1], sumList, totalLength)))
         t1 = time.time()
         fastTime = round(t1 - t0,3)
     else:
@@ -330,7 +331,7 @@ def getHeuristicDistance(a, b, acceptanceVal):
         
     return [smallestDistance, usedHeuristic]
          
-def getDistance(a, b, sumList, totalLength):
+def getDistanceFast(a, b, sumList, totalLength):
     small = None
     big = None
 
@@ -367,6 +368,20 @@ def getDistance(a, b, sumList, totalLength):
     else:
         return backDist
 
+# Gets the prefix sum list
+def getSumlist(stations):
+    tempSumlist = [0] * len(stations)
+    for index in range(len(stations)):
+        if index == 0:
+            tempSumlist[index] = stations[index]
+        else:
+            tempSumlist[index] = stations[index] + tempSumlist[index - 1]
+    return tempSumlist
+
+# 1 2 3 4 5
+# 1 3 6 10 15
+
+# Calculates errors using a slow method
 def getErrors(fastDist, slowDist):
     errors = 0
     for index in range(len(fastDist)):
