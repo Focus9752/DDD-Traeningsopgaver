@@ -378,9 +378,6 @@ def getSumlist(stations):
             tempSumlist[index] = stations[index] + tempSumlist[index - 1]
     return tempSumlist
 
-# 1 2 3 4 5
-# 1 3 6 10 15
-
 # Calculates errors using a slow method
 def getErrors(fastDist, slowDist):
     errors = 0
