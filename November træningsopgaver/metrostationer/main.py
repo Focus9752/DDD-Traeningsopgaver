@@ -136,10 +136,10 @@ def main():
     errorsFound = getErrors(fastDistances, slowDistances)
 
     if(usedHeuristic):
-        print("Used heuristic in {} out of {} cases ({} %)".format(str(heuristicCounter), str(totalPairs), str(((heuristicCounter / totalPairs) * 100))))
+        print("Used heuristic in {} out of {} cases ({} %)".format(str(heuristicCounter), str(totalPairs), str(round((heuristicCounter / totalPairs) * 100,1))))
 
-    print("The fast method made {} erros in of {} attempts.".format(errorsFound, len(stations)))
-    print("The error percentage was {}".format(str((errorsFound / len(stations) * 100))) + "%" + " compared to the slower method.")
+    print("The fast method made {} erros in {} attempts.".format(errorsFound, len(requests)))
+    print("The error percentage was {}".format(str(round((errorsFound / len(requests) * 100),1))) + "%" + " compared to the slower method.")
     print()
 
     if input("Print and compare results? (y/n): ").lower() == "y":
