@@ -1,8 +1,6 @@
 import random
-from ticktock import tick
 import time
 from colorama import init
-from termcolor import colored
 from colorama import Fore
 from colorama import Style
 
@@ -126,11 +124,12 @@ def main():
         slowDistances.append(int(getDistanceSlow(pair[0], pair[1])))
     t1 = time.time()
     slowTime = round(t1 - t0,3)
+    print("Success!")
 
     print(Fore.YELLOW)
-    timePercentDiff = round(100 - (fastTime / slowTime) * 100,1)
+    timeDiff = round((slowTime / fastTime),1)
     print("Checking for errors using the slow method took approximately {} s".format(str(slowTime)))
-    print("(This means that the faster method was {}".format(str(timePercentDiff)) + "%" + " faster than the slower method)")
+    print("(This means that the faster method was {} times faster than the slower method)".format(str(timeDiff)))
     print(Style.RESET_ALL)
 
     errorsFound = getErrors(fastDistances, slowDistances)
@@ -146,7 +145,7 @@ def main():
         for i in range(len(slowDistances) - 1):
             if fastDistances[i] == slowDistances[i]:
                 print(Fore.GREEN)
-                print("Result:   " + str(fastDistances[i]))
+                print("Output:   " + str(fastDistances[i]))
                 print("Expected: " + str(slowDistances[i]))
                 print()
             else:
