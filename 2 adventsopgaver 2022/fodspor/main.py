@@ -20,8 +20,6 @@ def main():
 
     movements = list(input())
 
-    print(movements)
-
     board[y][x] = "#"
 
     tempX = x
@@ -45,11 +43,6 @@ def main():
         elif currentMove == "H":
             x += 1
             board[y][x] = "#"
-
-        for i in range(len(board)):
-            print(board[i])
-        print("---------")
-
     
     for i in range(len(board)):
         output = ""
