@@ -6,62 +6,82 @@
 # 1 | 1 1 1
 # 2 | 8 6 4
 
-class Graph:
-    def __init__(self, n):
-        # number of nodes
-        self.nodes = n * 3
-        # edges and their values. initializes to -1
-        self.edges = [[-1 for i in range(n * 3)] for j in range(n * 3)]
-        # list of visited edges
-        self.visited = []
-    
-    # adds an edge to the graph
-    # parameters: the two nodes the edge connects, as well as the weight of the edge
-    def add_edge(self, u, v, weight):
-        self.edges[u][v] = weight
-        self.edges[v][u] = weight
+import graphs
+from queue import PriorityQueue
 
-def main():
-    n = int(input())
-    bus1 = list(map(int,(input().split())))
-    trains = list(map(int,(input().split())))
-    trains.append(0)
-    bus2 = list(map(int,(input().split()))) 
-    
-    g = Graph(n)
 
-    # Bus 1  -> edges 0 to n
-    # Trains -> edges n to n
-    # Bus 2  -> edges 2n to 3n
-    i = 1
-    while i <= n:
-        # the lists we want to access are 0-indexed, but we need to be able to divide them properly
-        # which is why we use two variables for the loop.
-    
-        # Bus 1
-        g.add_edge(i - 1, i + n - 1, bus1[i - 1])
-        g.add_edge(i - 1, i + 2 * n - 1, bus2[i - 1])
-        if i != n:
-            g.add_edge(i + n - 1, i + n - 1, trains[i])
+n = int(input())
+bus1list = list(map(int,(input().split())))
+trains = list(map(int,(input().split())))
+trains.append(0)
+bus2list = list(map(int,(input().split()))) 
+
+# define the nodes
+# the 2nd last and last element are the start and stop locations respectively
+nodes = [i for i in range(0,n * 3 + 2)]
+
+# define the edges as a list of touples (n1, n2, weight)
+# and add all edges
+edges = []
+for i in range(len(nodes)):
+    # bus1list
+    if i < n:
+        edges.append((i, n + i, bus1list[i]))
+
+    # trains
+    elif i < 2 * n:
+        # fires if we are at the last train station in the list
+        # we can't go to the next station
+        if i == 2 * n - 1:
+            pass
+
         else:
-            g.add_edge(i + n - 1, i + n - 1, trains[i - 1])
+            edges.append((i, i + 1, trains[i - n]))
 
-        i += 1
+    # bus2list
+    elif i < 3 * n:
+        edges.append((i, i - n, bus2list[i - 2 * n]))
+    
+    # add the start and end nodes
+    else:
+        for j in range(n):
+            edges.append((n * 3, j, bus1list[j]))
+            edges.append((n * 3 + 1, j + 2 * n, bus2list[j]))
 
-        # 4, 1, 7
-        # 5, 2, 8
-        # 6, 3, 9
+# convert the graph to an adjacency matrix
+g = graphs.adjacency_matrix(graphs.Graph(nodes,edges,True))
 
-        # 6, 1, 11
-        # 7, 2, 12
-        # 8, 3, 13
-        # 9, 4, 14
-        # 10, 5, 15
+graphs.matrixPrint(g)
 
-    print(g.edges)
+visited = []
 
-main()
 
+def dijkstra(start_vertex):
+        D = {v:float('inf') for v in range(len(nodes))}
+        D[start_vertex] = 0
+
+        pq = PriorityQueue()
+        pq.put((0, start_vertex))
+
+        while not pq.empty():
+            (dist, current_vertex) = pq.get()
+            visited.append(current_vertex)
+
+            for neighbor in range(len(nodes)):
+                if edges[current_vertex][neighbor] != -1:
+                    distance = edges[current_vertex][neighbor]
+                    if neighbor not in visited:
+                        old_cost = D[neighbor]
+                        new_cost = D[current_vertex] + distance
+                        if new_cost < old_cost:
+                            pq.put((new_cost, neighbor))
+                            D[neighbor] = new_cost
+        return 
+    
+print(D = dijkstra(0))
+
+# for vertex in range(len(D)):
+#     print("Distance from vertex 0 to vertex", vertex, "is", D[vertex])
 
         
     
