@@ -48,40 +48,40 @@ for i in range(len(nodes)):
             edges.append((n * 3, j, bus1list[j]))
             edges.append((n * 3 + 1, j + 2 * n, bus2list[j]))
 
-# convert the graph to an adjacency matrix
-g = graphs.adjacency_matrix(graphs.Graph(nodes,edges,True))
+# converts the graph to an adjacency matrix
+g_mat = graphs.adjacency_matrix(graphs.Graph(nodes,edges,True))
 
-graphs.matrixPrint(g)
+# converts the graph to an adjacency dictionary
+g_dict = graphs.adjacency_dict(graphs.Graph(nodes,edges,True))
 
-visited = []
+#graphs.matrixPrint(g_mat)
+print(g_dict)
 
+distances = g_dict
 
-def dijkstra(start_vertex):
-        D = {v:float('inf') for v in range(len(nodes))}
-        D[start_vertex] = 0
+unvisited = {node: None for node in nodes} #using None as +inf
+visited = {}
+current = 0
+currentDistance = 0
+unvisited[current] = currentDistance
 
-        pq = PriorityQueue()
-        pq.put((0, start_vertex))
+while True:
+    for neighbour, distance in distances[current].items():
+        if neighbour not in unvisited: continue
+        newDistance = currentDistance + distance
+        if unvisited[neighbour] is None or unvisited[neighbour] > newDistance:
+            unvisited[neighbour] = newDistance
+    visited[current] = currentDistance
+    del unvisited[current]
+    if not unvisited: break
+    candidates = [node for node in unvisited.items() if node[1]]
+    current, currentDistance = sorted(candidates, key = lambda x: x[1])[0]
 
-        while not pq.empty():
-            (dist, current_vertex) = pq.get()
-            visited.append(current_vertex)
+print(visited)
 
-            for neighbor in range(len(nodes)):
-                if edges[current_vertex][neighbor] != -1:
-                    distance = edges[current_vertex][neighbor]
-                    if neighbor not in visited:
-                        old_cost = D[neighbor]
-                        new_cost = D[current_vertex] + distance
-                        if new_cost < old_cost:
-                            pq.put((new_cost, neighbor))
-                            D[neighbor] = new_cost
-        return 
-    
-print(D = dijkstra(0))
 
 # for vertex in range(len(D)):
 #     print("Distance from vertex 0 to vertex", vertex, "is", D[vertex])
 
-        
-    
+
+

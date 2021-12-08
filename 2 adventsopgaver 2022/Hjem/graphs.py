@@ -17,12 +17,14 @@ g = Graph([0,1,2,3,4,5,6,7,8],[
 ],True)
 
 def adjacency_dict(graph):
-    adj = {node: [] for node in graph.nodes}
+    adj = {node: {} for node in graph.nodes}
     for edge in graph.edges:
-        node1, node2 = edge[0], edge[1]
-        adj[node1].append(node2)
+        node1, node2, weigth = edge[0], edge[1], edge[2]
+        #adj[node1] = {}
+        adj[node1][node2] = weigth
         if not graph.is_directed:
-            adj[node2].append(node1)
+            #adj[node2] = {}
+            adj[node2][node1] = weigth
     
     return adj
 
