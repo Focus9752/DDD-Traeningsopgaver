@@ -1,4 +1,6 @@
 from collections import namedtuple
+from os import close
+import statistics
 
 Graph = namedtuple("Graph", ["nodes", "edges","is_directed"])
 
@@ -110,7 +112,8 @@ def dijkstra(nodes, edges, source, destination, is_directed=False):
             return pathlengths[u]
     
     return pathlengths
-    
+
 dist_to_goal = dijkstra(nodes, edges, nodes[n * 3], nodes[n * 3 + 1], True)
 
 print(dist_to_goal)
+
