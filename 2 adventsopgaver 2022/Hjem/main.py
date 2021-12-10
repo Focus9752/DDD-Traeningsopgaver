@@ -82,13 +82,10 @@ def dijkstra(nodes, edges, source, destination, is_directed=False):
     # we set the path length of the source node to 0
     pathlengths[source] = 0
 
-    # # we initialize a nested dictionary to store the adjacent nodes for each node
-    # adjacent_nodes = {n: {} for n in nodes}
-    # # we add adjacent nodes to the dictionary
-    # for (u, v), w_uw in edges.items():
-    #     adjacent_nodes[u][v] = w_uw
-    #     adjacent_nodes[v][u] = w_uw
+    # we initialize a nested dictionary to store the adjacent nodes for each node
 
+    # structure:
+    # adj_nodes = {node: (adjacent_node, weigth)}
     adjacent_nodes = adjacency_dict(Graph(nodes,edges,is_directed))
 
     # this list will contain nodes that we have yet to check
@@ -97,7 +94,7 @@ def dijkstra(nodes, edges, source, destination, is_directed=False):
     while len(temporary_nodes) > 0:
         # we find the path length to each node in the list of remaining nodes
         upper_bounds = {n: pathlengths[n] for n in temporary_nodes}
-        # and find the node with the smallest path length
+        # and find the node with the smallest path length (designated u)
         u = min(upper_bounds, key=upper_bounds.get)
 
         # we remove the smallest node (the node that we are considering)
