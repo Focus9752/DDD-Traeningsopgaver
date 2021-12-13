@@ -15,14 +15,25 @@ print()
 inputNumbers = []
 requests = []
 
-print("Generér testdata (0) eller indtast data manuelt (1)?")
-if input() == "0":
+print("Generer testdata automatisk ('j'/'n')?")
+if input() == "j":
     print()
-    print("Indtast en maksværdi for de tilfældigt genererede tal til testdata: ")
+    print("Indtast en maksværdi for de tilfældigt genererede tal til testdata.")
+    print(("Værdien skal være større end n og k (mindst {}):").format(str(max(n,k) + 1)))
     randomnessRange = int(input())
     print()
+    if randomnessRange >= 100000:
+        print(Fore.RED)
+        print("Advarsel: Det kan tage lang tid at generere testdata med en stor maksværdi (over 10^5).")
+        print("Vil du fortsætte? ('j'/'n')")
+        print(Style.RESET_ALL)
+        if input().lower() == "n":
+            print()
+            print("Indtast en ny maksværdi:")
+            randomnessRange = int(input())
+            print()
 
-    print("Generer testdata...")
+    print("Genererer testdata...")
     t0 = time.time()
     for i in range(n):
         inputNumbers.append([i,i])
@@ -44,7 +55,6 @@ if input() == "0":
     t1 = time.time()
     print(Fore.YELLOW)
     print("Testdata genereret ({} s)".format(str(round(t1 - t0,3))))
-    print(Style.RESET_ALL)
 else:
     print()
     for i in range(n):
@@ -60,9 +70,8 @@ numbers = [inputNumbers[i][1] for i in range(len(inputNumbers))]
 
 inputNumbersDict = {inputNumbers[i][1]: inputNumbers[i][0] for i in range(len(inputNumbers))}
 t1 = time.time()
-
 print(Fore.YELLOW)
-print("Transformeret data ({} s)".format(str(round(t1-t0,3))))
+print("Data transformeret ({} s)".format(str(round(t1-t0,3))))
 print(Style.RESET_ALL)
 
 fastanswer = []
@@ -82,7 +91,7 @@ def fastmethod():
         newindex = temp_list.index(q)
         # if q is placed last, then there are no y bigger than or equal to it
         if newindex == len(temp_list) - 1:
-            # print(-1)
+            slowanswer.append(-1)
             pass
         else:
             step1t0 = time.time()
@@ -118,8 +127,8 @@ def slowmethod():
         newindex = temp_list.index(q)
         # if q is placed last, then there are no y bigger than or equal to it
         if newindex == len(temp_list) - 1:
-            #print(-1)
-            pass
+            slowanswer.append(-1)
+            continue
         else:
             step1t0 = time.time()
             for i in range(newindex,len(temp_list)):
@@ -129,8 +138,8 @@ def slowmethod():
             step1t1 = time.time()
             for pair in inputNumbers:
                 if pair[1] == targetnum:
-                    #print(pair[0])
-                    pass
+                    slowanswer.append(pair[0])
+                    break
             step2t1 = time.time()
 
             step1duration += (step1t1 - step1t0)
@@ -154,6 +163,8 @@ def compare_errors(ans1, ans2):
 
 fastmethod()
 slowmethod()
-print("The fast method made {} errors.".format(str(compare_errors(fastanswer, slowanswer))))
 
+print("Udskriv svar og fejl?")
 
+print("Den hurtige metode lavede {} fejl.".format(str(compare_errors(fastanswer, slowanswer))))
+print()
