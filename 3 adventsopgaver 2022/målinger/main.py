@@ -12,6 +12,7 @@ for i in range(n):
 # [50, 55, 60]
 numbers = [inputNumbers[i][1] for i in range(len(inputNumbers))]
 
+inputNumbersDict = {inputNumbers[i][1]: inputNumbers[i][0] for i in range(len(inputNumbers))}
 # store requests
 requests = []
 
@@ -34,10 +35,26 @@ def main():
                 targetnum = temp_list[i]
                 if temp_list[i] >= q and targetnum in numbers:
                     break
-            for pair in inputNumbers:
-                if pair[1] == targetnum:
-                    print(pair[0])
+            print(inputNumbersDict[targetnum])
 
+def binarySearch(A, elem, l, r):
+    if l <= r:
+        m = (l + r + 1) // 2
+
+        if l == r:
+            return l
+
+        elif A[m] > elem:
+            return binarySearch(A, elem, l, m - 1)
+        
+        else:
+            return binarySearch(A, elem, m, r)
+
+def S(x, q):
+    if x >= q:
+        return True
+    else:
+        return False
 
 main()
 
