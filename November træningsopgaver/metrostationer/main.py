@@ -3,6 +3,7 @@ import time
 from colorama import init
 from colorama import Fore
 from colorama import Style
+from alive_progress import alive_bar
 
 init(convert=True)
 
@@ -16,34 +17,24 @@ q = int(lst1[1])
 
 time0 = time.time()
 print("Please wait, generating test cases...")
-
-# Store the stations in a list and format them
-# stations = input().split(" ")
-# stations = list(filter(None, stations))
-# stations = list(map(int, stations))
-    
-# Debug
-# print()
-# print("n: " + str(n))
-# print("q: " + str(q))
-# print("stations: ")
-# print(stations)
-# print()
+print()
 
 # Format requests
 requests = []
 
 stations = []
 
-i = 0
-while i < n:
-    stations.append(random.randint(1,10**9))
-    i += 1
+print("Generating station list...")
+with alive_bar(n) as bar:
+    for i in range(n):
+        stations.append(random.randint(1,10**9))
+        bar()
 
-i = 0
-while i < q:
-    requests.append([random.randint(1, n), random.randint(1, n)])
-    i += 1
+print("Generating request list...")
+with alive_bar(q) as bar:
+    for i in range(q):
+        requests.append([random.randint(1, n), random.randint(1, n)])
+        bar()
 
 # i = 0
 # while i < q:
@@ -59,7 +50,7 @@ totalPairs = len(requests)
 
 time1 = time.time()
 print(Fore.YELLOW)
-print("Generating test cases took approximately {} s".format(str(round(time1 - time0,3))))
+print("Generating test cases took approximately {} s".format(str(round(time1 - time0,1))))
 print(Style.RESET_ALL)
 
 def main():
@@ -84,8 +75,10 @@ def main():
         totalLength = sumList[len(stations) - 1]
         tprefixsum = time.time()
         print("Calculating distances...")
-        for pair in requests:
-            fastDistances.append(int(getDistanceFast(pair[0], pair[1], sumList, totalLength)))
+        with alive_bar(q) as bar:
+            for pair in requests:
+                fastDistances.append(int(getDistanceFast(pair[0], pair[1], sumList, totalLength)))
+                bar()
         t1 = time.time()
         fastTime = round(t1 - t0,3)
     else:
@@ -93,12 +86,14 @@ def main():
         print()
         print("Calculating the distances using the heuristic method...")
         t0 = time.time()
-        for pair in requests:
-            # Stores answer and wether or not heuristic was used
-            tempHeuristicList = getHeuristicDistance(pair[0], pair[1], acceptanceVal)
-            fastDistances.append((tempHeuristicList[0]))
-            if(tempHeuristicList[1] == True):
-                heuristicCounter += 1
+        with alive_bar(q) as bar:
+            for pair in requests:
+                # Stores answer and wether or not heuristic was used
+                tempHeuristicList = getHeuristicDistance(pair[0], pair[1], acceptanceVal)
+                fastDistances.append((tempHeuristicList[0]))
+                if(tempHeuristicList[1] == True):
+                    heuristicCounter += 1
+                bar()
         t1 = time.time()
         fastTime = round(t1 - t0,3)
         usedHeuristic = True
@@ -120,16 +115,18 @@ def main():
     print("Please wait, checking for errors...")
     
     t0 = time.time()
-    for pair in requests:
-        slowDistances.append(int(getDistanceSlow(pair[0], pair[1])))
+    with alive_bar(q) as bar:
+        for pair in requests:
+            slowDistances.append(int(getDistanceSlow(pair[0], pair[1])))
+            bar()
     t1 = time.time()
     slowTime = round(t1 - t0,3)
     print("Success!")
 
     print(Fore.YELLOW)
-    timeDiff = round((slowTime / fastTime),1)
+    timeDiff = round((abs(slowTime - fastTime)),1)
     print("Checking for errors using the slow method took approximately {} s".format(str(slowTime)))
-    print("(This means that the faster method was {} times faster than the slower method)".format(str(timeDiff)))
+    print("The time difference between the two methods was approximately {} s".format(str(timeDiff)))
     print(Style.RESET_ALL)
 
     errorsFound = getErrors(fastDistances, slowDistances)
@@ -150,7 +147,7 @@ def main():
                 print()
             else:
                 print(Fore.RED)
-                print("Result:   " + str(fastDistances[i]))
+                print("Output:   " + str(fastDistances[i]))
                 print("Expected: " + str(slowDistances[i]))
     
 
@@ -370,11 +367,13 @@ def getDistanceFast(a, b, sumList, totalLength):
 # Gets the prefix sum list
 def getSumlist(stations):
     tempSumlist = [0] * len(stations)
-    for index in range(len(stations)):
-        if index == 0:
-            tempSumlist[index] = stations[index]
-        else:
-            tempSumlist[index] = stations[index] + tempSumlist[index - 1]
+    with alive_bar(len(stations)) as bar:
+        for index in range(len(stations)):
+            if index == 0:
+                tempSumlist[index] = stations[index]
+            else:
+                tempSumlist[index] = stations[index] + tempSumlist[index - 1]
+            bar()
     return tempSumlist
 
 # Calculates errors using a slow method
@@ -383,7 +382,6 @@ def getErrors(fastDist, slowDist):
     for index in range(len(fastDist)):
         if(fastDist[index] != slowDist[index]):
             errors += 1
-    
     return errors
 
 main()
