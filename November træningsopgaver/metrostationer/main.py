@@ -102,10 +102,10 @@ def main():
     print("Success!")
     print(Fore.YELLOW)
     if(usedHeuristic == False):
-        print("Generating the prefix sum list took {} s".format(str(round(tprefixsum - t0,3))))
-        print("Calculating the distances took approximately {} s".format(str(round(t1 - tprefixsum,3))))
+        print("Generating the prefix sum list took {} s".format(str(round(tprefixsum - t0,1))))
+        print("Calculating the distances took approximately {} s".format(str(round(t1 - tprefixsum,1))))
     else:
-        print("Calculating the distances took approximately {} s".format(str(round(t1 - t0,3))))
+        print("Calculating the distances took approximately {} s".format(str(round(t1 - tprefixsum,1))))
     print(Style.RESET_ALL)
 
     if(input("Check for errors? (y/n): ").lower() != "y"):
