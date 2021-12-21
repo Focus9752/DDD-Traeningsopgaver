@@ -14,7 +14,7 @@ try:
     from tour_visualizer import Model, View
     GUI_ON = True
 except ImportError:
-    GUI_ON = True
+    GUI_ON = False
 
 class PathFound(RuntimeError):
     pass
