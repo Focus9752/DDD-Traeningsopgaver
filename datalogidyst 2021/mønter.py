@@ -5,20 +5,8 @@ inputArr = list(map(int, input().split()))
 coinsDict = {5: inputArr[0], 10: inputArr[1], 20: inputArr[2]}
 
 def main():
-    result = 0
-    change = 0
-    sum = 0
-
-    result += coinsDict[20] - (coinsDict[20] % 3)
-    coinsDict[20] = coinsDict[20] % 3
-
-    if coinsDict[20] == 2:
-
-        pass
-    elif coinsDict[20] == 1:
+    while True:
         
-        pass
-    else:
-        pass
+
 
 main()
