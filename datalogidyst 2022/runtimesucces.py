@@ -1,7 +1,8 @@
 def main():
     N = int(input())
     runnerIntervals = []
-    overlapsList = [[] for _ in range(N)]
+    # We just use a list for the stack
+    stack = []
 
     for i in range(N):
         runnerIntervals.append(list(input().split(" ")))
@@ -9,21 +10,31 @@ def main():
     for i in range(N):
         runnerIntervals[i] = list(map(int, list(filter(None, runnerIntervals[i]))))
 
+    # Sort intervals
     runnerIntervals.sort()
 
-    print(runnerIntervals, overlapsList)
+    # Append the first interval to the stack
+    stack.append(runnerIntervals[0])
 
+    for i in range(1, N, 1):
+        # Cache current interval
+        currentInterval = runnerIntervals[i]
 
+        # Set temp to top element in stack
+        temp = stack[len(stack) - 1]
 
-    for i in range(N):
-        firstInterval = runnerIntervals[i]
-        for j in range(N):
-            if overlaps(firstInterval, runnerIntervals[j]) and j != i:
-                overlapsList[i].append(j)
+        if temp[0] <= currentInterval[0] <= temp[1]:
+            if temp[1] < currentInterval[1]:
+                temp = [currentInterval[0], temp[1]]
+            else:
+                temp = [currentInterval[0], currentInterval[1]]
+            
+            stack.pop()
+            stack.append(temp)
 
-    print(runnerIntervals, overlapsList)
+        else:
+            stack.append(currentInterval)
 
-def overlaps(a,b):
-    return a[0] <= b[0] <= a[1] or b[0] <= a[0] <= b[1]
+    print(len(stack))
 
 main()
