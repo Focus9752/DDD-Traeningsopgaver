@@ -1,3 +1,22 @@
+"""
+Two intervals [A1, B1] and [A2, B2] are considered overlapping if A1 <= A2 <= B1
+
+1.  Sort intervals based on lowest time (from lowest to highest)
+
+2.  Insert 1st interval into stack
+
+3.  Look at the next interval. 
+    If it overlaps with the interval at the top of the stack, we merge the two intervals.
+    We do this backwards (making the new merged interval as small as possible)
+    
+    If it doesn't overlap, then we add this interval to the stack as the new top.
+    We can be sure that no other intervals will overlap with the ones in the stack, 
+    since the intervals are sorted.
+
+4.  We repeat step 3 until we have processed all of the intervals. 
+    We return the stack, which now contains the new, merged intervals.
+"""
+
 def main():
     N = int(input())
     runnerIntervals = []
