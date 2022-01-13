@@ -1,7 +1,10 @@
-import sys
+from collections import namedtuple
+import itertools
 
-sys.setrecursionlimit(10**9)
+cycle = namedtuple("cycle", ["startIndex", "endIndex", "length"])
 
+def main():
+    pass
 
 def calculateStarScore(S, P, score, original_S):
     S = list(S)
@@ -38,6 +41,4 @@ for i in range(Q):
     qList.append(int(inputList[0]))
     cList.append(str(inputList[1]))
 
-for i in range(Q):
-    name = changeName(name, qList[i], cList[i])
-    print(calculateStarScore(name, P, 0, name))
+main()
