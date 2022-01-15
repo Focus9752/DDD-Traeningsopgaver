@@ -1,14 +1,22 @@
-from audioop import reverse
-from collections import namedtuple
-import itertools
+from functools import cache
 
 def main():
     cyclesList = findCycles()
 
-    for i in range(len(cyclesList)):
-        for j in range(len(cyclesList)):
-            if len(cyclesList[i]) % len(cyclesList[j]) == 0:
-                 cyclesList.remove(cyclesList[j])
+    for cycle1 in cyclesList:
+        cycle1Length = len(cycle1)
+
+        for cycle2 in cyclesList:
+            cycle2Length = len(cycle2)
+            
+            if cycle2 != cycle1:
+                if cycle1Length > cycle2Length:
+                    if cycle1Length % cycle2Length == 0:
+                        cyclesList.remove(cycle2)
+
+                else:
+                    if cycle2Length % cycle1Length == 0:
+                        cyclesList.remove(cycle1)
     
     for i in range(len(qList)):
         name[qList[i]] = cList[i]
@@ -22,17 +30,36 @@ def main():
         for i in range(len(cycleLenghts)):
             result *= cycleLenghts[i]
     
-        print(result)
+        print(result % 1000000007)
 
+@cache
 def getUniqueStrings(cycle):
     cycleKeys = list(cycle.keys())
-    firstLetter = cycleKeys[0]
+    # firstLetter = name[cycleKeys[0]]
 
-    for index in cycleKeys:
-        if name[index] != firstLetter:
-            return len(cycle)
+    # for index in cycleKeys:
+    #     if name[index] != firstLetter:
+    #         return len(cycle)
     
-    return 1
+    # return 1
+
+    changes = 0
+
+    originalStringDict = dict()
+    for key in cycleKeys:
+        originalStringDict[key] = name[key]
+    
+    tempString1Dict = dict(originalStringDict)
+    tempString2Dict = dict(originalStringDict)
+    
+    while not(tempString1Dict == originalStringDict and changes > 0):
+        for key, value in cycle.items():
+            tempString2Dict[value] = tempString1Dict[key]
+        
+        tempString1Dict = dict(tempString2Dict)
+        changes += 1
+    
+    return changes
 
 def findCycles():
     cyclesListTemp = []
@@ -45,7 +72,7 @@ def findCycles():
         startIndex = currentIndex
 
         while True:
-            currentCycle[currentIndex + 1] = P[currentIndex] + 1
+            currentCycle[currentIndex] = P[currentIndex]
             del(name_P_dict[currentIndex])
             currentIndex = P[currentIndex]
 
